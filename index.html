@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HomeBack — NRI US Exit Advisor</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:   #09111F;
+  --navy2:  #0F1A2E;
+  --navy3:  #152038;
+  --gold:   #C9973A;
+  --goldl:  #E8B96A;
+  --green:  #2ECC8A;
+  --red:    #F05A5A;
+  --amber:  #F0A030;
+  --blue:   #4A9EE8;
+  --text:   #F0EEF8;
+  --text2:  #B8C0D4;
+  --text3:  #7A8499;
+  --text4:  #445068;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--navy); color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  min-height:100vh; overflow-x:hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 0%,rgba(201,151,58,0.08) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 60% at 90% 100%,rgba(74,158,232,0.05) 0%,transparent 55%);
+}
+
+/* ── HEADER ── */
+.hdr {
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px;
+  background:rgba(9,17,31,0.93); backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(201,151,58,0.12);
+}
+.logo { display:flex; align-items:center; gap:9px; }
+.logo-icon {
+  width:36px; height:36px; border-radius:10px;
+  background:linear-gradient(135deg,#C9973A,#E8B96A);
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; box-shadow:0 4px 14px rgba(201,151,58,0.3);
+}
+.logo-name { font-family:Georgia,serif; font-size:21px; font-weight:700; }
+.logo-name span { color:var(--goldl); }
+.phase-badge {
+  background:rgba(201,151,58,0.12); border:1px solid rgba(201,151,58,0.28);
+  color:var(--goldl); font-size:10px; font-weight:700;
+  padding:4px 10px; border-radius:20px; letter-spacing:.06em; text-transform:uppercase;
+}
+.progress-dots { display:flex; align-items:center; gap:8px; }
+.pdot {
+  width:28px; height:28px; border-radius:50%; border:2px solid;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; cursor:pointer; transition:all .3s;
+}
+
+/* ── SCREENS ── */
+.screen { display:none; position:relative; z-index:1; }
+.screen.active { display:block; }
+
+/* ── WELCOME ── */
+.welcome { padding:0 18px 40px; }
+.flag { text-align:center; font-size:48px; margin:36px 0 24px; }
+.welcome-headline {
+  text-align:center; margin-bottom:20px;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp .6s .1s ease forwards;
+}
+.welcome-headline h1 {
+  font-family:Georgia,serif; font-size:36px; font-weight:700;
+  line-height:1.1; letter-spacing:-.01em; margin-bottom:14px;
+}
+.welcome-headline h1 span { color:var(--goldl); }
+.welcome-headline p { font-size:14px; color:var(--text3); line-height:1.75; max-width:300px; margin:0 auto; }
+.welcome-headline strong { color:var(--text2); }
+.steps-list {
+  margin-bottom:28px;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp .6s .25s ease forwards;
+}
+.step-row {
+  display:flex; align-items:center; gap:14px;
+  padding:13px 16px; margin-bottom:8px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;
+}
+.step-icon {
+  width:40px; height:40px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:19px;
+}
+.step-info { flex:1; }
+.step-info strong { display:block; font-size:14px; font-weight:700; margin-bottom:2px; }
+.step-info span { font-size:12px; color:var(--text3); }
+.step-num {
+  font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px;
+}
+.promise-box {
+  background:linear-gradient(135deg,rgba(201,151,58,0.1),rgba(201,151,58,0.04));
+  border:1px solid rgba(201,151,58,0.25); border-radius:16px;
+  padding:20px 18px; margin-bottom:28px; text-align:center;
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp .6s .4s ease forwards;
+}
+.promise-box .star { font-size:22px; margin-bottom:10px; }
+.promise-box p { font-size:13px; color:var(--text2); line-height:1.7; }
+.promise-box strong { color:var(--goldl); }
+.start-wrap {
+  opacity:0; transform:translateY(20px);
+  animation:fadeUp .6s .5s ease forwards;
+}
+
+/* ── ADVISOR SCREENS ── */
+.advisor { padding-bottom:40px; }
+.step-label { font-size:11px; font-weight:600; color:var(--text4); text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; }
+.screen-title { font-family:Georgia,serif; font-size:32px; font-weight:700; line-height:1.1; margin-bottom:10px; }
+.screen-desc { font-size:13px; color:var(--text3); line-height:1.65; margin-bottom:24px; }
+.px18 { padding:0 18px; }
+.pt28 { padding-top:28px; }
+
+/* ── CARD ── */
+.card {
+  background:var(--navy2); border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px; margin-bottom:14px; overflow:hidden;
+}
+.card-header { padding:18px 18px 0; }
+.card-icon-row { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.card-icon {
+  width:44px; height:44px; border-radius:13px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; flex-shrink:0;
+}
+.card-title-wrap .title { font-family:Georgia,serif; font-size:17px; font-weight:700; }
+.ai-badge {
+  display:inline-block; font-size:10px; font-weight:700;
+  background:rgba(74,158,232,0.15); color:var(--blue);
+  padding:2px 7px; border-radius:5px; text-transform:uppercase; letter-spacing:.04em;
+}
+.card-body { padding:0 18px 16px; display:flex; flex-direction:column; gap:10px; }
+
+/* ── FORM ── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.field { display:flex; flex-direction:column; gap:4px; }
+.field label { font-size:10px; font-weight:700; color:var(--text4); text-transform:uppercase; letter-spacing:.07em; }
+.field input, .field select {
+  background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:10px; padding:11px 13px; color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif; font-size:13px; font-weight:500;
+  outline:none; width:100%; transition:border-color .2s; appearance:none;
+}
+.field input:focus, .field select:focus { border-color:var(--gold); }
+.field input::placeholder { color:var(--text4); }
+input[type=number]::-webkit-inner-spin-button { -webkit-appearance:none; }
+
+/* ── BUTTONS ── */
+.btn-gold {
+  width:100%; padding:14px 0; border-radius:12px; border:none;
+  background:linear-gradient(135deg,var(--gold),var(--goldl));
+  color:var(--navy); font-size:14px; font-weight:700;
+  font-family:'Plus Jakarta Sans',sans-serif; cursor:pointer;
+  letter-spacing:.02em; box-shadow:0 4px 18px rgba(201,151,58,0.3);
+  transition:all .2s;
+}
+.btn-gold:disabled { opacity:.5; cursor:not-allowed; box-shadow:none; }
+.btn-gold:active:not(:disabled) { transform:scale(.98); }
+.btn-outline {
+  width:100%; padding:13px 0; border-radius:12px;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+  color:var(--text2); font-size:14px; font-weight:600;
+  font-family:'Plus Jakarta Sans',sans-serif; cursor:pointer; transition:all .2s;
+}
+.btn-outline:hover { background:rgba(255,255,255,0.1); }
+
+/* ── AI RESULT ── */
+.ai-result { display:none; padding:0 18px 18px; }
+.ai-result.show { display:block; }
+.ai-thinking {
+  display:flex; align-items:center; gap:10px; padding:16px;
+  background:rgba(74,158,232,0.06); border:1px solid rgba(74,158,232,0.15);
+  border-radius:12px; font-size:13px; color:var(--text3);
+}
+.ai-thinking .spin { animation:spin 1s linear infinite; display:inline-block; }
+.ai-box {
+  background:rgba(9,17,31,0.7); border:1px solid rgba(201,151,58,0.25);
+  border-radius:14px; overflow:hidden;
+}
+.ai-box-header {
+  padding:12px 16px; background:rgba(201,151,58,0.07);
+  border-bottom:1px solid rgba(201,151,58,0.2);
+  display:flex; align-items:center; gap:8px;
+  font-size:12px; font-weight:700; color:var(--goldl);
+}
+.ai-box-body {
+  padding:16px; font-size:13px; line-height:1.75;
+  white-space:pre-wrap; color:#C8D0E0;
+}
+.ai-box-body.error { color:var(--red); }
+
+/* ── KNOWLEDGE ROWS ── */
+.know-card { padding:16px 18px; }
+.know-title { font-family:Georgia,serif; font-size:16px; font-weight:700; margin-bottom:12px; }
+.know-row {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  padding:11px 0; border-bottom:1px solid rgba(255,255,255,0.05); gap:12px;
+}
+.know-row:last-child { border-bottom:none; }
+.know-q { font-size:13px; font-weight:500; color:var(--text2); flex:1; }
+.know-a { font-size:13px; font-weight:700; text-align:right; flex-shrink:0; }
+
+/* ── ALERT ── */
+.alert {
+  display:flex; gap:10px; padding:13px 15px; border-radius:12px;
+  margin-bottom:14px; font-size:13px; line-height:1.6; color:var(--text2); border:1px solid;
+}
+.alert-icon { font-size:17px; flex-shrink:0; margin-top:1px; }
+.alert.gold  { background:rgba(201,151,58,0.08); border-color:rgba(201,151,58,0.22); }
+.alert.red   { background:rgba(240,90,90,0.08);  border-color:rgba(240,90,90,0.22); }
+.alert.green { background:rgba(46,204,138,0.08); border-color:rgba(46,204,138,0.22); }
+.alert strong { color:var(--text); }
+
+/* ── SECTION LABEL ── */
+.sec-lbl {
+  display:flex; align-items:center; gap:10px; margin-bottom:10px;
+  font-size:10px; font-weight:700; color:var(--text4);
+  text-transform:uppercase; letter-spacing:.09em;
+}
+.sec-lbl::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
+
+/* ── TILES ── */
+.tile-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+.tile {
+  background:var(--navy2); border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px; padding:14px;
+}
+.tile-icon { font-size:22px; margin-bottom:8px; }
+.tile-label { font-size:10px; font-weight:700; color:var(--text4); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.tile-val { font-family:Georgia,serif; font-size:20px; font-weight:700; color:var(--goldl); margin-bottom:3px; }
+.tile-note { font-size:11px; color:var(--text3); }
+
+/* ── CHECKLIST ── */
+.progress-bar-wrap {
+  background:var(--navy2); border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px; padding:14px 16px; margin-bottom:24px;
+}
+.progress-bar-top { display:flex; justify-content:space-between; margin-bottom:8px; }
+.progress-bar-top span:first-child { font-size:13px; font-weight:600; color:var(--text2); }
+.progress-bar-top span:last-child  { font-size:13px; font-weight:700; color:var(--green); }
+.progress-bar { height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--green),#6FE8B0); transition:width .4s ease; }
+.chk-list { display:flex; flex-direction:column; gap:8px; margin-bottom:14px; }
+.chk-item {
+  display:flex; align-items:center; gap:11px;
+  padding:12px 13px; border-radius:12px; border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.03); cursor:pointer; transition:all .15s;
+}
+.chk-item.done { background:rgba(46,204,138,0.05); border-color:rgba(46,204,138,0.15); }
+.chk-box {
+  width:22px; height:22px; border-radius:6px; border:2px solid var(--text4);
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; color:var(--navy); transition:all .2s;
+}
+.chk-item.done .chk-box { background:var(--green); border-color:var(--green); }
+.chk-text { flex:1; font-size:13px; font-weight:500; color:var(--text2); line-height:1.4; }
+.chk-item.done .chk-text { color:var(--text4); text-decoration:line-through; }
+.chk-tag {
+  font-size:10px; font-weight:700; padding:3px 7px; border-radius:5px;
+  text-transform:uppercase; letter-spacing:.04em; flex-shrink:0;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-icon">🏠</div>
+    <div class="logo-name">Home<span>Back</span></div>
+  </div>
+  <div id="hdr-right">
+    <div class="phase-badge">US Exit</div>
+  </div>
+</header>
+
+<!-- ══════════════ WELCOME ══════════════ -->
+<div id="screen-welcome" class="screen active welcome">
+  <div class="flag" style="opacity:0;animation:fadeUp .6s .05s ease forwards">🇮🇳</div>
+  <div class="welcome-headline">
+    <h1>Ready to return to<br><span>your motherland?</span></h1>
+    <p>Millions of Indians are moving back home. We're here to make sure you do it the <strong>smartest, least costly way possible.</strong></p>
+  </div>
+  <div class="steps-list">
+    <div class="step-row">
+      <div class="step-icon" style="background:rgba(232,185,106,0.12);border:1px solid rgba(232,185,106,0.3)">🏡</div>
+      <div class="step-info"><strong>Step 1 — Home</strong><span>Sell your US home at the best price</span></div>
+      <div class="step-num" style="color:#E8B96A;background:rgba(232,185,106,0.15)">1/4</div>
+    </div>
+    <div class="step-row">
+      <div class="step-icon" style="background:rgba(46,204,138,0.12);border:1px solid rgba(46,204,138,0.3)">💰</div>
+      <div class="step-info"><strong>Step 2 — Finances</strong><span>401k, taxes & moving your money</span></div>
+      <div class="step-num" style="color:#2ECC8A;background:rgba(46,204,138,0.15)">2/4</div>
+    </div>
+    <div class="step-row">
+      <div class="step-icon" style="background:rgba(74,158,232,0.12);border:1px solid rgba(74,158,232,0.3)">📦</div>
+      <div class="step-info"><strong>Step 3 — Shipping</strong><span>What to ship, what to sell</span></div>
+      <div class="step-num" style="color:#4A9EE8;background:rgba(74,158,232,0.15)">3/4</div>
+    </div>
+    <div class="step-row">
+      <div class="step-icon" style="background:rgba(240,160,48,0.12);border:1px solid rgba(240,160,48,0.3)">🚗</div>
+      <div class="step-info"><strong>Step 4 — Car</strong><span>Sell your car for maximum value</span></div>
+      <div class="step-num" style="color:#F0A030;background:rgba(240,160,48,0.15)">4/4</div>
+    </div>
+  </div>
+  <div class="promise-box">
+    <div class="star">✦</div>
+    <p>We'll walk you through each step — <strong>real numbers, real scenarios</strong> — so you don't lose money on the most important move of your life.</p>
+  </div>
+  <div class="start-wrap">
+    <button class="btn-gold" onclick="goTo('home')">Let's Begin My Move Plan →</button>
+  </div>
+</div>
+
+<!-- ══════════════ HOME ADVISOR ══════════════ -->
+<div id="screen-home" class="screen advisor">
+  <div class="px18 pt28">
+    <div class="step-label">Step 1 of 4</div>
+    <div class="screen-title">🏡 Sell Your<br><span style="color:var(--goldl)">US Home</span></div>
+    <div class="screen-desc">Your home is your biggest asset. Get exact tax liability, net proceeds, and what actually arrives in your Indian bank account.</div>
+  </div>
+  <div class="px18">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon-row">
+          <div class="card-icon" style="background:rgba(201,151,58,0.12);border:1px solid rgba(201,151,58,0.28)">🏡</div>
+          <div class="card-title-wrap">
+            <div class="title">Home Sale Advisor</div>
+            <span class="ai-badge">✦ AI Powered</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field"><label>Home Type</label>
+            <select id="h-type"><option>Single Family</option><option>Townhouse</option><option>Condo</option></select>
+          </div>
+          <div class="field"><label>Bedrooms</label>
+            <select id="h-beds"><option>1 bed</option><option>2 bed</option><option selected>3 bed</option><option>4 bed</option><option>5+ bed</option></select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Purchase Price ($)</label><input id="h-buy" type="number" placeholder="380000"></div>
+          <div class="field"><label>Current Value ($)</label><input id="h-val" type="number" placeholder="520000"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Years Owned</label><input id="h-yrs" type="number" placeholder="6"></div>
+          <div class="field"><label>Primary Residence?</label>
+            <select id="h-pri"><option value="yes">Yes</option><option value="no">No / Rental</option></select>
+          </div>
+        </div>
+        <div class="field"><label>City / State</label><input id="h-city" type="text" placeholder="San Jose, CA"></div>
+        <button class="btn-gold" id="btn-home" onclick="analyzeHome()">✦ Analyze My Home Sale</button>
+      </div>
+      <div class="ai-result" id="result-home"></div>
+    </div>
+
+    <div class="sec-lbl">Capital Gains Quick Reference</div>
+    <div class="card">
+      <div class="know-card">
+        <div class="know-title">🏛️ Section 121 Tax Exclusion</div>
+        <div class="know-row"><span class="know-q">Single filer exclusion</span><span class="know-a" style="color:var(--green)">$250,000</span></div>
+        <div class="know-row"><span class="know-q">Married filing jointly</span><span class="know-a" style="color:var(--green)">$500,000</span></div>
+        <div class="know-row"><span class="know-q">Qualification requirement</span><span class="know-a">2 of last 5 years</span></div>
+        <div class="know-row"><span class="know-q">Tax rate on gains above exclusion</span><span class="know-a" style="color:var(--amber)">15–20%</span></div>
+        <div class="know-row"><span class="know-q">Realtor commission</span><span class="know-a" style="color:var(--red)">5–6%</span></div>
+        <div class="know-row"><span class="know-q">Closing costs</span><span class="know-a" style="color:var(--red)">~1%</span></div>
+      </div>
+    </div>
+
+    <div class="alert gold"><span class="alert-icon">💡</span><span><strong>Sell before you leave.</strong> Once you become a non-resident, you may lose the Section 121 exclusion. Timing your sale right could save $75,000–$100,000 in taxes.</span></div>
+    <button class="btn-gold" onclick="goTo('finance')">Continue to Finances →</button>
+  </div>
+</div>
+
+<!-- ══════════════ FINANCE ADVISOR ══════════════ -->
+<div id="screen-finance" class="screen advisor">
+  <div class="px18 pt28">
+    <div class="step-label">Step 2 of 4</div>
+    <div class="screen-title">💰 Finances &<br><span style="color:var(--green)">401k Strategy</span></div>
+    <div class="screen-desc">Most NRIs lose $30,000–$50,000 by making the wrong 401k decision. Get the exact numbers and strategy.</div>
+  </div>
+  <div class="px18">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon-row">
+          <div class="card-icon" style="background:rgba(46,204,138,0.1);border:1px solid rgba(46,204,138,0.22)">💰</div>
+          <div class="card-title-wrap">
+            <div class="title">401k & Tax Advisor</div>
+            <span class="ai-badge">✦ AI Powered</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field"><label>401k Balance ($)</label><input id="f-401k" type="number" placeholder="150000"></div>
+          <div class="field"><label>Your Age</label><input id="f-age" type="number" placeholder="38"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Annual Income ($)</label><input id="f-income" type="number" placeholder="180000"></div>
+          <div class="field"><label>Filing Status</label>
+            <select id="f-status"><option value="single">Single</option><option value="married" selected>Married</option></select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>IRA Balance ($)</label><input id="f-ira" type="number" placeholder="40000"></div>
+          <div class="field"><label>US Stocks/ETFs ($)</label><input id="f-stocks" type="number" placeholder="75000"></div>
+        </div>
+        <button class="btn-gold" id="btn-finance" onclick="analyzeFinance()">✦ Analyze My Financial Exit</button>
+      </div>
+      <div class="ai-result" id="result-finance"></div>
+    </div>
+
+    <div class="sec-lbl">401k Scenarios at a Glance</div>
+    <div class="card">
+      <div class="know-card">
+        <div class="know-title">💸 If You Cash Out Early (under 59½)</div>
+        <div class="know-row"><span class="know-q">IRS early withdrawal penalty</span><span class="know-a" style="color:var(--red)">10% flat</span></div>
+        <div class="know-row"><span class="know-q">Federal income tax on amount</span><span class="know-a" style="color:var(--red)">22–37%</span></div>
+        <div class="know-row"><span class="know-q">State income tax (CA)</span><span class="know-a" style="color:var(--red)">Up to 13.3%</span></div>
+        <div class="know-row"><span class="know-q">Total loss on $100k withdrawal</span><span class="know-a" style="color:var(--red)">$35k–$50k</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="know-card">
+        <div class="know-title">✅ Smarter Options</div>
+        <div class="know-row"><span class="know-q">Leave 401k, withdraw after 59½</span><span class="know-a" style="color:var(--green)">No 10% penalty</span></div>
+        <div class="know-row"><span class="know-q">Roll over to Traditional IRA</span><span class="know-a" style="color:var(--green)">Zero taxes now</span></div>
+        <div class="know-row"><span class="know-q">DTAA India-US treaty</span><span class="know-a" style="color:var(--green)">No double tax</span></div>
+        <div class="know-row"><span class="know-q">Annual US filing after move</span><span class="know-a" style="color:var(--amber)">Yes, every year</span></div>
+      </div>
+    </div>
+
+    <div class="alert green"><span class="alert-icon">💡</span><span><strong>Most NRIs leave their 401k in the US</strong> and withdraw after age 59½. The DTAA treaty ensures India won't tax what the US already taxed.</span></div>
+    <button class="btn-gold" onclick="goTo('ship')">Continue to Shipping →</button>
+  </div>
+</div>
+
+<!-- ══════════════ SHIPPING ADVISOR ══════════════ -->
+<div id="screen-ship" class="screen advisor">
+  <div class="px18 pt28">
+    <div class="step-label">Step 3 of 4</div>
+    <div class="screen-title">📦 What to Ship<br><span style="color:var(--blue)">vs. What to Sell</span></div>
+    <div class="screen-desc">Shipping the wrong things wastes thousands. Get the exact plan for your household.</div>
+  </div>
+  <div class="px18">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon-row">
+          <div class="card-icon" style="background:rgba(74,158,232,0.1);border:1px solid rgba(74,158,232,0.22)">📦</div>
+          <div class="card-title-wrap">
+            <div class="title">Shipping Advisor</div>
+            <span class="ai-badge">✦ AI Powered</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field"><label>Family Size</label>
+            <select id="s-family">
+              <option>1 person</option><option>2 people</option>
+              <option selected>Family (3-4)</option><option>Large family (5+)</option>
+            </select>
+          </div>
+          <div class="field"><label>Home Size</label>
+            <select id="s-size">
+              <option>1 BHK / Studio</option><option>2 BHK</option>
+              <option selected>3 BHK</option><option>4+ BHK</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Furniture?</label>
+            <select id="s-furn">
+              <option value="yes" selected>Yes, significant</option>
+              <option value="some">Some pieces</option>
+              <option value="no">IKEA / minimal</option>
+            </select>
+          </div>
+          <div class="field"><label>Electronics?</label>
+            <select id="s-elec">
+              <option value="yes" selected>Yes, high-end</option>
+              <option value="some">A few items</option>
+              <option value="no">Minimal</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-gold" id="btn-ship" onclick="analyzeShip()">✦ Calculate My Shipping Plan</button>
+      </div>
+      <div class="ai-result" id="result-ship"></div>
+    </div>
+
+    <div class="sec-lbl">Container Cost Guide</div>
+    <div class="tile-grid">
+      <div class="tile"><div class="tile-icon">📦</div><div class="tile-label">Small (LCL)</div><div class="tile-val">~$1,200</div><div class="tile-note">~200 cu.ft. shared</div></div>
+      <div class="tile"><div class="tile-icon">🚢</div><div class="tile-label">20ft container</div><div class="tile-val">~$3,900</div><div class="tile-note">Full 2BHK</div></div>
+      <div class="tile"><div class="tile-icon">🛳️</div><div class="tile-label">40ft container</div><div class="tile-val">~$6,500</div><div class="tile-note">Full 4BHK</div></div>
+      <div class="tile"><div class="tile-icon">✈️</div><div class="tile-label">Air freight</div><div class="tile-val" style="color:var(--red)">$8–14/kg</div><div class="tile-note">Docs & urgent only</div></div>
+    </div>
+    <div class="alert gold"><span class="alert-icon">⏱️</span><span>Sea freight takes <strong>6–10 weeks door-to-door.</strong> Book at least 3 months before your move. Summer months are peak — prices spike 20–30%.</span></div>
+    <div class="alert red"><span class="alert-icon">⚡</span><span><strong>Voltage warning:</strong> US = 110V/60Hz. India = 230V/50Hz. Most kitchen appliances and hair tools will NOT work in India — sell them here.</span></div>
+    <button class="btn-gold" onclick="goTo('car')">Continue to Car →</button>
+  </div>
+</div>
+
+<!-- ══════════════ CAR ADVISOR ══════════════ -->
+<div id="screen-car" class="screen advisor">
+  <div class="px18 pt28">
+    <div class="step-label">Step 4 of 4</div>
+    <div class="screen-title">🚗 Sell Your Car<br><span style="color:var(--amber)">for Max Value</span></div>
+    <div class="screen-desc">Your car is the last thing you sell — you'll need it until the final days. Get a price estimate and selling strategy.</div>
+  </div>
+  <div class="px18">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon-row">
+          <div class="card-icon" style="background:rgba(240,160,48,0.1);border:1px solid rgba(240,160,48,0.22)">🚗</div>
+          <div class="card-title-wrap">
+            <div class="title">Car Value Advisor</div>
+            <span class="ai-badge">✦ AI Powered</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="grid3">
+          <div class="field"><label>Year</label><input id="c-year" type="number" placeholder="2020"></div>
+          <div class="field"><label>Make</label><input id="c-make" type="text" placeholder="Toyota"></div>
+          <div class="field"><label>Model</label><input id="c-model" type="text" placeholder="Camry"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Mileage</label><input id="c-miles" type="number" placeholder="45000"></div>
+          <div class="field"><label>Condition</label>
+            <select id="c-cond">
+              <option value="excellent">Excellent</option>
+              <option value="good" selected>Good</option>
+              <option value="fair">Fair</option>
+              <option value="poor">Poor</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-gold" id="btn-car" onclick="analyzeCar()">✦ Analyze My Car Value</button>
+      </div>
+      <div class="ai-result" id="result-car"></div>
+    </div>
+
+    <div class="sec-lbl">Platform Comparison</div>
+    <div class="card">
+      <div class="know-card">
+        <div class="know-row"><span class="know-q">CarMax — instant offer, same day</span><span class="know-a" style="color:var(--amber)">~85% of value</span></div>
+        <div class="know-row"><span class="know-q">Carvana — online offer, 24–48hrs</span><span class="know-a" style="color:var(--amber)">~87% of value</span></div>
+        <div class="know-row"><span class="know-q">Facebook Marketplace / private</span><span class="know-a" style="color:var(--green)">~100% of value</span></div>
+        <div class="know-row"><span class="know-q">Dealer trade-in</span><span class="know-a" style="color:var(--red)">~75–80% of value</span></div>
+      </div>
+    </div>
+    <div class="alert red"><span class="alert-icon">⚠️</span><span>Shipping to India: freight $1,500–$3,000 + <strong>customs duty 100–160% of car value.</strong> A $20,000 car costs $30,000+ to import. Sell it here.</span></div>
+    <button class="btn-gold" onclick="goTo('checklist')">View My Complete Checklist →</button>
+  </div>
+</div>
+
+<!-- ══════════════ CHECKLIST ══════════════ -->
+<div id="screen-checklist" class="screen advisor">
+  <div class="px18 pt28">
+    <div class="screen-title">✅ Your Master<br><span style="color:var(--green)">Move Checklist</span></div>
+    <div class="screen-desc">Every step sorted by timing. Tap to mark complete.</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-top">
+        <span id="chk-count">0 of 23 completed</span>
+        <span id="chk-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="chk-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="px18" id="checklist-body"></div>
+</div>
+
+<script>
+// ── NAVIGATION ──────────────────────────────────────────────────────────────
+const SCREENS = ["welcome","home","finance","ship","car","checklist"];
+const MODS = [
+  { id:"home",    emoji:"🏡", color:"#E8B96A" },
+  { id:"finance", emoji:"💰", color:"#2ECC8A" },
+  { id:"ship",    emoji:"📦", color:"#4A9EE8" },
+  { id:"car",     emoji:"🚗", color:"#F0A030" },
+];
+
+let currentScreen = "welcome";
+
+function goTo(id) {
+  document.getElementById("screen-" + currentScreen).classList.remove("active");
+  document.getElementById("screen-" + id).classList.add("active");
+  currentScreen = id;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  updateHeader();
+}
+
+function updateHeader() {
+  const hdrRight = document.getElementById("hdr-right");
+  if (currentScreen === "welcome") {
+    hdrRight.innerHTML = '<div class="phase-badge">US Exit</div>';
+    return;
+  }
+  const idx = SCREENS.indexOf(currentScreen);
+  let dots = '<div class="progress-dots">';
+  MODS.forEach((m, i) => {
+    const isActive = currentScreen === m.id;
+    const isDone = idx > i + 1 || currentScreen === "checklist";
+    const bg = isDone ? "#2ECC8A" : isActive ? m.color : "rgba(255,255,255,0.06)";
+    const bc = isDone ? "#2ECC8A" : isActive ? m.color : "rgba(255,255,255,0.1)";
+    const sh = isActive ? `box-shadow:0 0 10px ${m.color}40` : "";
+    dots += `<div class="pdot" onclick="goTo('${m.id}')" style="background:${bg};border-color:${bc};${sh}">${isDone ? "✓" : m.emoji}</div>`;
+  });
+  dots += "</div>";
+  hdrRight.innerHTML = dots;
+}
+
+// ── AI CALL ──────────────────────────────────────────────────────────────────
+async function callAI(prompt, type, resultId, btnId) {
+  const resultEl = document.getElementById(resultId);
+  const btnEl    = document.getElementById(btnId);
+
+  resultEl.classList.add("show");
+  resultEl.innerHTML = `<div class="ai-thinking"><span class="spin">⏳</span>&nbsp; HomeBack AI is analyzing your details...</div>`;
+  btnEl.disabled = true;
+  btnEl.textContent = "Analyzing...";
+
+  try {
+    const res  = await fetch("/api/advisor", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, type }),
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      resultEl.innerHTML = `<div class="ai-box"><div class="ai-box-header">🤖 HomeBack AI Advisor</div><div class="ai-box-body error">⚠️ ${data.error || "Something went wrong. Please try again."}</div></div>`;
+    } else {
+      resultEl.innerHTML = `<div class="ai-box"><div class="ai-box-header">🤖 HomeBack AI Advisor</div><div class="ai-box-body">${escHtml(data.result)}</div></div>`;
+    }
+  } catch (e) {
+    resultEl.innerHTML = `<div class="ai-box"><div class="ai-box-header">🤖 HomeBack AI Advisor</div><div class="ai-box-body error">⚠️ Network error. Please check your connection and try again.</div></div>`;
+  }
+
+  btnEl.disabled = false;
+  btnEl.textContent = "✦ Analyze Again";
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function val(id) { return document.getElementById(id).value; }
+
+// ── ANALYZERS ────────────────────────────────────────────────────────────────
+function analyzeHome() {
+  const buy = val("h-buy"), v = val("h-val"), yrs = val("h-yrs");
+  if (!buy || !v || !yrs) { alert("Please fill purchase price, current value, and years owned."); return; }
+  const gain = parseInt(v) - parseInt(buy);
+  callAI(`NRI selling US home before moving to India permanently.
+Home: ${val("h-type")}, ${val("h-beds")}, Location: ${val("h-city") || "USA"}
+Purchase price: $${buy}, Current value: $${v}
+Years owned: ${yrs}, Primary residence: ${val("h-pri")}
+Capital gain: $${gain}
+
+Give me:
+1. Exact capital gains tax math — exclusion, taxable gain, tax owed
+2. Net proceeds after realtor (5.5%) + closing costs (1%) + tax
+3. Sell before or after moving — exact tax difference
+4. How to send proceeds to India: NRE/NRO, FEMA limits, wire timeline
+5. Most expensive mistake NRIs make when selling
+⭐ Bottom Line: exact net amount landing in my Indian bank account`, "home", "result-home", "btn-home");
+}
+
+function analyzeFinance() {
+  const bal = val("f-401k"), age = val("f-age"), inc = val("f-income");
+  if (!bal || !age || !inc) { alert("Please fill 401k balance, age, and income."); return; }
+  const under = parseInt(age) < 59;
+  callAI(`NRI aged ${age} moving to India permanently.
+401k: $${bal}, IRA: $${val("f-ira")||0}, Stocks: $${val("f-stocks")||0}
+Income: $${inc}, Status: ${val("f-status")}
+${under ? "Under 59½ — 10% early withdrawal penalty APPLIES" : "Over 59½ — no early withdrawal penalty"}
+
+Give me:
+1. EXACT math if I cash out 401k — federal tax + ${under?"10% penalty + ":""}state tax = dollars lost
+2. Dollar amount I receive vs. lose
+3. IRA rollover — zero tax, exact steps
+4. DTAA treaty — how it protects me, what I file yearly
+5. If I LEAVE 401k in US — annual requirements, withdraw from India at 59½
+6. Best move for stocks $${val("f-stocks")||0}
+7. NRE vs NRO — which receives what
+⭐ Bottom Line: smart strategy vs. cash out — dollar difference`, "finance", "result-finance", "btn-finance");
+}
+
+function analyzeShip() {
+  const furn = val("s-furn");
+  const elec = val("s-elec");
+  callAI(`NRI family shipping from USA to India.
+Family: ${val("s-family")}, Home: ${val("s-size")}
+Furniture: ${furn==="yes"?"Significant":furn==="some"?"Some pieces":"IKEA/minimal"}
+Electronics: ${elec==="yes"?"High-end":elec==="some"?"A few items":"Minimal"}
+
+Give me:
+1. Container size (LCL/20ft/40ft) with exact cost
+2. Specific items to SHIP with dollar savings
+3. Specific items to SELL here with reason
+4. Which US appliances won't work in India (230V/50Hz)
+5. Indian customs duty rules — what's duty-free for returning NRIs
+6. Top 3 mistakes NRI families make when shipping
+⭐ Bottom Line: container size, total cost, money saved`, "ship", "result-ship", "btn-ship");
+}
+
+function analyzeCar() {
+  const yr = val("c-year"), mk = val("c-make"), mo = val("c-model"), mi = val("c-miles");
+  if (!yr || !mk || !mo || !mi) { alert("Please fill in all car details."); return; }
+  callAI(`NRI selling car in USA before moving to India.
+Car: ${yr} ${mk} ${mo}, ${mi} miles, Condition: ${val("c-cond")}
+
+Give me:
+1. Realistic private sale price range in today's US market
+2. Estimated offers: CarMax vs Carvana vs private vs dealer (dollar amounts)
+3. Shipping to India — show freight + customs duty math (100–160% of value)
+4. Best strategy to sell quickly with fixed move date
+5. Known issues with this make/model affecting resale
+6. What to fix/clean before selling for max price
+⭐ Bottom Line: which platform, expected price, exact order of steps`, "car", "result-car", "btn-car");
+}
+
+// ── CHECKLIST ────────────────────────────────────────────────────────────────
+const GROUPS = [
+  { label:"12 months before", items:[
+    { id:"c1",  text:"List your home for sale immediately",                    tag:"Critical",     tc:"#F05A5A" },
+    { id:"c2",  text:"Hire a cross-border CPA (US + India tax)",               tag:"Critical",     tc:"#F05A5A" },
+    { id:"c3",  text:"Start job search in India",                              tag:"Critical",     tc:"#F05A5A" },
+    { id:"c4",  text:"Decide which city to settle in India",                   tag:"Soon",         tc:"#F0A030" },
+  ]},
+  { label:"6 months before", items:[
+    { id:"c5",  text:"Open NRE account (tax-free repatriation)",               tag:"Required",     tc:"#F05A5A" },
+    { id:"c6",  text:"Open NRO account (Indian-sourced income)",               tag:"Required",     tc:"#F05A5A" },
+    { id:"c7",  text:"Decide 401k strategy with your CPA",                     tag:"High Impact",  tc:"#4A9EE8" },
+    { id:"c8",  text:"Research children's schools in India",                   tag:"Family",       tc:"#F0A030" },
+    { id:"c9",  text:"Get 3 car quotes (CarMax, Carvana, private)",           tag:"Soon",         tc:"#F0A030" },
+  ]},
+  { label:"3 months before", items:[
+    { id:"c10", text:"Book international shipping container",                  tag:"Book Early",   tc:"#F05A5A" },
+    { id:"c11", text:"Sort belongings: ship vs. sell vs. donate",              tag:"Soon",         tc:"#F0A030" },
+    { id:"c12", text:"Get Indian health insurance (US cover ends on landing)", tag:"Critical",     tc:"#F05A5A" },
+    { id:"c13", text:"Book flights — check family baggage allowance",          tag:"Soon",         tc:"#F0A030" },
+    { id:"c14", text:"Liquidate US stocks strategically",                      tag:"Tax Timing",   tc:"#4A9EE8" },
+  ]},
+  { label:"Final month", items:[
+    { id:"c15", text:"Cancel all US subscriptions",                            tag:"Admin",        tc:"#7A8499" },
+    { id:"c16", text:"Set up USPS mail forwarding",                            tag:"Admin",        tc:"#7A8499" },
+    { id:"c17", text:"Notify IRS of new foreign address",                      tag:"Legal",        tc:"#4A9EE8" },
+    { id:"c18", text:"Carry all original documents in hand luggage",           tag:"Don't forget", tc:"#F05A5A" },
+    { id:"c19", text:"Sell your car (keep it until last week)",                tag:"Last Step",    tc:"#F0A030" },
+  ]},
+  { label:"After landing in India", items:[
+    { id:"c20", text:"Reactivate Aadhaar and PAN card",                        tag:"Week 1",       tc:"#F05A5A" },
+    { id:"c21", text:"Convert NRE/NRO to resident savings account",            tag:"Required",     tc:"#F05A5A" },
+    { id:"c22", text:"File dual-status US tax return (year of departure)",     tag:"By Apr 15",    tc:"#4A9EE8" },
+    { id:"c23", text:"Transfer or renew Indian driving license",               tag:"Month 1",      tc:"#F0A030" },
+  ]},
+];
+
+const checked = {};
+const TOTAL = GROUPS.reduce((a, g) => a + g.items.length, 0);
+
+function buildChecklist() {
+  const body = document.getElementById("checklist-body");
+  let html = "";
+  GROUPS.forEach(g => {
+    html += `<div class="sec-lbl">${g.label}</div><div class="chk-list">`;
+    g.items.forEach(item => {
+      html += `<div class="chk-item" id="chk-${item.id}" onclick="toggleChk('${item.id}')">
+        <div class="chk-box" id="box-${item.id}"></div>
+        <div class="chk-text">${item.text}</div>
+        <span class="chk-tag" style="color:${item.tc};background:${item.tc}18">${item.tag}</span>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `<div class="alert gold" style="margin-top:8px"><span class="alert-icon">🎉</span><span><strong>You're almost home.</strong> This covers everything a moving NRI family needs. Tap any step dot in the header to revisit advisors anytime.</span></div>`;
+  html += `<button class="btn-outline" onclick="goTo('welcome')" style="margin-bottom:20px">← Start Over / Review Advisors</button>`;
+  body.innerHTML = html;
+}
+
+function toggleChk(id) {
+  checked[id] = !checked[id];
+  const item = document.getElementById("chk-" + id);
+  const box  = document.getElementById("box-"  + id);
+  item.classList.toggle("done", checked[id]);
+  box.textContent = checked[id] ? "✓" : "";
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.values(checked).filter(Boolean).length;
+  const pct  = Math.round((done / TOTAL) * 100);
+  document.getElementById("chk-count").textContent = `${done} of ${TOTAL} completed`;
+  document.getElementById("chk-pct").textContent   = `${pct}%`;
+  document.getElementById("chk-fill").style.width  = `${pct}%`;
+}
+
+// Build checklist on load
+buildChecklist();
+</script>
+</body>
+</html>
